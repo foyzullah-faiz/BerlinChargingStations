@@ -1,30 +1,41 @@
 # ⚡ Berlin Charging Hub
 
-A professional, test-driven geographic dashboard for exploring and managing charging station infrastructure in Berlin. This project demonstrates high-level software engineering principles, including **Clean Architecture**, **Test-Driven Development (TDD)**, and **Cloud Deployment**.
+An advanced software system for discovering, filtering, and managing EV charging stations in Berlin. Built with a **3-Layer Clean Architecture**, this project ensures high maintainability, testability, and scalability.
 
-## 🌐 Live Application
-**View the live app here:** [https://berlinchargingstation.streamlit.app/](https://berlinchargingstation.streamlit.app/)
-
----
-
-## 🏗️ Architecture: 3-Layer Pattern
-This project follows the **Clean Architecture** (Onion Architecture) pattern to ensure a strict separation of concerns, making the system highly maintainable and scalable.
-
-1.  **Domain Layer**: Contains the "Source of Truth" (Entities and Value Objects). It has no dependencies on other layers.
-2.  **Application Layer**: Contains services that orchestrate the business logic (e.g., searching for stations or handling reports).
-3.  **Infrastructure Layer**: Handles data persistence (CSV Repositories) and external frameworks.
-4.  **Presentation Layer**: Built with Streamlit and PyDeck for interactive user experience.
-
-
+**Live App:** [https://berlinchargingstation.streamlit.app/](https://berlinchargingstation.streamlit.app/)
 
 ---
 
-## 🧪 Quality Assurance: TDD Process
-The backend of this system was developed using **Test-Driven Development**. 
-- **Validation**: Strict ZIP code validation ensuring only 5-digit German codes are processed.
-- **Unit Testing**: 8+ automated tests cover station discovery, error handling, and reporting logic.
-- **Independence**: The logic is tested entirely separate from the UI, ensuring reliability.
+## 🏛️ Architectural Overview
 
-**To run the automated tests locally:**
-```bash
-python3 -m pytest tests/
+This project follows **Domain-Driven Design (DDD)** and **Separation of Concerns (SoC)**. By isolating business logic from infrastructure, the system remains "pluggable" and robust.
+
+
+
+### The 3-Layer Structure:
+1.  **Domain Layer (`src/*/domain`)**: The "Heart" of the app. Contains Entities and Value Objects (e.g., `PostalCode` validation). It has zero dependencies on external libraries.
+2.  **Application Layer (`src/*/application`)**: The "Brain." Orchestrates the flow of data between the UI and the Domain models.
+3.  **Infrastructure Layer (`src/*/infrastructure`)**: The "Tools." Handles data persistence (CSV reading/writing) and external datasets.
+
+---
+
+## 📂 Project Structure
+
+```text
+BerlinChargingStations/
+├── src/
+│   ├── charging/           # Charging Station Discovery Domain
+│   │   ├── application/    # Filtering and Search Services
+│   │   ├── domain/         # Station Entities
+│   │   └── infrastructure/ # CSV Repositories
+│   ├── maintenance/        # Malfunction Reporting Domain
+│   │   ├── application/    # Reporting Services
+│   │   ├── domain/         # Malfunction Entities
+│   │   └── infrastructure/ # Persistence for Reports
+│   ├── shared/             # Cross-cutting concerns
+│   │   ├── domain/         # Shared Value Objects (PostalCode)
+│   │   └── infrastructure/ # Centralized CSV Datasets
+│   └── presentation/       # Streamlit UI Layer (app.py)
+├── tests/                  # TDD Suite (Pytest)
+├── requirements.txt        # Dependency Management
+└── README.md               # Project Documentation
