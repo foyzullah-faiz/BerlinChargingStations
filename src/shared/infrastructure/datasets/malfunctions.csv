@@ -1,4 +1,2 @@
 station_id,description
-TEST-001,Broken display
-REF-001,Broken screen
-REF-002,Broken cable
+BER-10409-9,Screen is not working
