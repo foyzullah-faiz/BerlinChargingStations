@@ -1,30 +1,41 @@
 import pandas as pd
-import os
 from pathlib import Path
+from typing import List, Dict
 
 class MalfunctionRepository:
     """
-    Infrastructure Repository to persist malfunction reports in a CSV file.
+    Handles persistence for malfunction reports.
+    Refactored to include robust error handling and type safety.
     """
-    def __init__(self):
+    def __init__(self) -> None:
         current_file = Path(__file__).resolve()
         root = next(p for p in current_file.parents if p.name == "BerlinChargingStations")
         self.path = root / "src" / "shared" / "infrastructure" / "datasets" / "malfunctions.csv"
 
     def save(self, report) -> bool:
+        """Appends a new report to the CSV file safely."""
         try:
-            # 1. Prepare the data row
             new_data = pd.DataFrame([{
                 "station_id": report.station_id,
                 "description": report.description
             }])
 
-            # 2. Append to existing file or create new
-            if not self.path.exists():
-                new_data.to_csv(self.path, index=False)
-            else:
-                new_data.to_csv(self.path, mode='a', header=False, index=False)
-            
+            # Use header=False if file exists to avoid duplicating headers
+            file_exists = self.path.exists()
+            new_data.to_csv(
+                self.path, 
+                mode='a', 
+                index=False, 
+                header=not file_exists, 
+                encoding='utf-8'
+            )
             return True
-        except Exception:
+        except Exception as e:
+            print(f"Repository Error: {e}")
             return False
+
+    def get_all(self) -> List[Dict]:
+        """Utility method added during refactor to retrieve all reports."""
+        if not self.path.exists():
+            return []
+        return pd.read_csv(self.path).to_dict('records')
